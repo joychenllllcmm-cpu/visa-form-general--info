@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>签证申请评估登记</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #f1f5f9; -webkit-tap-highlight-color: transparent; }
+        .card { background: white; border-radius: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .opt-btn { border: 1.5px solid #e2e8f0; transition: all 0.2s; background: #fff; color: #475569; }
+        .opt-btn.active { border-color: #2563eb; background: #eff6ff; color: #1d4ed8; font-weight: 600; }
+        .multi-btn { border: 1.5px solid #e2e8f0; transition: all 0.2s; background: #fff; color: #475569; }
+        .multi-btn.selected { border-color: #10b981; background: #ecfdf5; color: #065f46; font-weight: 600; }
+        input[type="range"] { accent-color: #2563eb; }
+        .sticky-bar { position: sticky; bottom: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); margin: 0 -1.5rem -1.5rem -1.5rem; padding: 1.25rem; border-top: 1px solid #e2e8f0; }
+    </style>
+</head>
+<body class="p-4 pb-10">
+    <div class="max-w-md mx-auto">
+        <div class="card p-6 mb-6">
+            <header class="mb-8">
+                <h1 class="text-xl font-extrabold text-slate-900">签证申请预检登记</h1>
+                <p class="text-slate-400 text-xs mt-1 font-medium">请勾选您的真实情况，以便为您匹配方案</p>
+            </header>
+
+            <form id="visaForm" class="space-y-8">
+                <!-- 1. 人数 -->
+                <section>
+                    <label class="block text-sm font-bold text-slate-700 mb-4 flex justify-between items-center">
+                        <span class="flex items-center gap-2"><span class="w-1.5 h-4 bg-blue-600 rounded-full"></span>1. 申请人数</span>
+                        <span class="text-blue-600 bg-blue-50 px-3 py-1 rounded-full text-xs" id="pNum">1人</span>
+                    </label>
+                    <input type="range" id="pCount" min="1" max="8" value="1" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                    <div class="flex justify-between text-[10px] text-slate-400 mt-2 px-1 font-medium">
+                        <span>1人</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8人+</span>
+                    </div>
+                </section>
+
+                <!-- 2. 目的 -->
+                <section>
+                    <label class="block text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
+                        <span class="w-1.5 h-4 bg-blue-600 rounded-full"></span>2. 访问目的 & 类型
+                    </label>
+                    <div class="grid grid-cols-2 gap-2 mb-3" id="purpose">
+                        <button type="button" class="opt-btn p-3 rounded-xl text-sm" data-val="旅游">普通旅游</button>
+                        <button type="button" class="opt-btn p-3 rounded-xl text-sm" data-val="探亲/访友">探亲/访友</button>
+                        <button type="button" class="opt-btn p-3 rounded-xl text-sm" data-val="商务考察">商务考察</button>
+                        <button type="button" class="opt-btn p-3 rounded-xl text-sm" data-val="留学/游学">留学/游学</button>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl flex items-center justify-between border border-slate-100">
+                        <span class="text-[11px] text-slate-500 font-bold">是否有邀请方？</span>
+                        <div class="flex gap-2" id="hasInviter">
+                            <button type="button" class="opt-btn px-4 py-1 rounded-lg text-xs" data-val="有邀请方">有</button>
+                            <button type="button" class="opt-btn px-4 py-1 rounded-lg text-xs" data-val="无邀请方">无</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. 出入境记录（核心修改：多选/滑动感） -->
+                <section>
+                    <label class="block text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
+                        <span class="w-1.5 h-4 bg-blue-600 rounded-full"></span>3. 曾获签/去过的国家 (多选)
+                    </label>
+                    <div class="grid grid-cols-3 gap-2" id="travelHistory">
+                        <button type="button" class="multi-btn py-2 rounded-lg text-[11px]" data-val="美国">美国</button>
+                        <button type="button" class="multi-btn py-2 rounded-lg text-[11px]" data-val="加拿大">加拿大</button>
+                        <button type="button" class="multi-btn py-2 rounded-lg text-[11px]" data-val="澳大利亚">澳大利亚</button>
+                        <button type="button" class="multi-btn py-2 rounded-lg text-[11px]" data-val="新西兰">新西兰</button>
+                        <button type="button" class="multi-btn py-2 rounded-lg text-[11px]" data-val="英国">英国</button>
+                        <button type="button" class="multi-btn py-2 rounded-lg text-[11px]" data-val="申根国">申根国</button>
+                        <button type="button" class="multi-btn py-2 rounded-lg text-[11px]" data-val="日韩">日/韩</button>
+                        <button type="button" class="multi-btn py-2 rounded-lg text-[11px]" data-val="东南亚">东南亚</button>
+                        <button type="button" class="multi-btn py-2 rounded-lg text-[11px]" data-val="无出境记录">无出境史</button>
+                    </div>
+
+                    <div class="mt-4 p-4 bg-red-50 rounded-xl border border-red-100">
+                        <p class="text-[11px] text-red-600 mb-2 font-bold">是否有任何拒签记录？</p>
+                        <div class="flex gap-2" id="refusal">
+                            <button type="button" class="opt-btn flex-1 py-2 rounded-lg text-xs" data-val="有拒签史">是</button>
+                            <button type="button" class="opt-btn flex-1 py-2 rounded-lg text-xs" data-val="无拒签史">否</button>
+                        </div>
+                        <input type="text" id="refusalDetail" placeholder="哪国/何时/原因" class="hidden mt-3 w-full p-3 text-xs bg-white border border-red-200 rounded-xl outline-none focus:ring-1 ring-red-400">
+                    </div>
+                </section>
+
+                <!-- 4. 身份 (带填空) -->
+                <section>
+                    <label class="block text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
+                        <span class="w-1.5 h-4 bg-blue-600 rounded-full"></span>4. 目前身份状态
+                    </label>
+                    <div class="grid grid-cols-2 gap-2" id="jobStatus">
+                        <button type="button" class="opt-btn py-3 rounded-xl text-xs" data-val="在职人员">在职人员</button>
+                        <button type="button" class="opt-btn py-3 rounded-xl text-xs" data-val="企业主/自雇">企业主/自雇</button>
+                        <button type="button" class="opt-btn py-3 rounded-xl text-xs" data-val="退休人员">退休人员</button>
+                        <button type="button" class="opt-btn py-3 rounded-xl text-xs" data-val="学生">学生</button>
+                        <button type="button" class="opt-btn py-3 rounded-xl text-xs" data-val="自由职业">自由职业</button>
+                        <button type="button" class="opt-btn py-3 rounded-xl text-xs" data-val="其他">其他</button>
+                    </div>
+                    <input type="text" id="jobOtherDetail" placeholder="请具体说明身份情况" class="hidden mt-3 w-full p-3 text-xs bg-white border border-slate-200 rounded-xl outline-none focus:border-blue-400">
+                </section>
+
+                <!-- 5. 资金来源 (多选 & 细分) -->
+                <section>
+                    <label class="block text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
+                        <span class="w-1.5 h-4 bg-blue-600 rounded-full"></span>5. 资金/收入来源 (多选)
+                    </label>
+                    <div class="grid grid-cols-2 gap-2" id="fundSources">
+                        <button type="button" class="multi-btn py-3 rounded-xl text-xs" data-val="工资卡流水">工资卡流水</button>
+                        <button type="button" class="multi-btn py-3 rounded-xl text-xs" data-val="个人生意流水">个人生意流水</button>
+                        <button type="button" class="multi-btn py-3 rounded-xl text-xs" data-val="公司名下分红">公司名下分红</button>
+                        <button type="button" class="multi-btn py-3 rounded-xl text-xs" data-val="房产租金收入">房产租金收入</button>
+                        <button type="button" class="multi-btn py-3 rounded-xl text-xs" data-val="股票/基金理财">股票/基金理财</button>
+                        <button type="button" class="multi-btn py-3 rounded-xl text-xs" data-val="父母/配偶支持">父母/配偶支持</button>
+                        <button type="button" class="multi-btn py-3 rounded-xl text-xs" data-val="退休金/社保">退休金/社保</button>
+                        <button type="button" class="multi-btn py-3 rounded-xl text-xs" data-val="大额存款/资产">大额存款/资产</button>
+                    </div>
+                </section>
+
+                <div class="sticky-bar">
+                    <button type="button" id="copyBtn" class="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl shadow-xl active:scale-95 transition-transform">
+                        填好了，复制信息
+                    </button>
+                </div>
+            </form>
+        </div>
+        <footer class="text-center text-slate-400 text-[10px] pb-6 font-medium italic">
+            &copy; 签证专家服务 · 您的信息已加密保护
+        </footer>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-800/95 text-white px-8 py-5 rounded-3xl hidden z-50 text-center shadow-2xl">
+        <div class="text-2xl mb-2">📋</div>
+        <p class="text-sm font-bold">已成功复制</p>
+        <p class="text-[10px] mt-1 opacity-60 italic">请返回微信粘贴发送给我</p>
+    </div>
+
+    <script>
+        // 滑动条控制
+        const pS = document.getElementById('pCount'), pL = document.getElementById('pNum');
+        pS.oninput = () => pL.innerText = pS.value >= 8 ? '8人以上' : pS.value + '人';
+
+        // 单选逻辑
+        function setupSingle(id) {
+            const container = document.getElementById(id);
+            container.querySelectorAll('button').forEach(btn => {
+                btn.onclick = () => {
+                    container.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    if(id === 'refusal') document.getElementById('refusalDetail').classList.toggle('hidden', btn.dataset.val.includes('无'));
+                    if(id === 'jobStatus') document.getElementById('jobOtherDetail').classList.toggle('hidden', btn.dataset.val !== '其他');
+                }
+            });
+        }
+
+        // 多选逻辑
+        function setupMulti(id) {
+            const container = document.getElementById(id);
+            container.querySelectorAll('button').forEach(btn => {
+                btn.onclick = () => {
+                    btn.classList.toggle('selected');
+                }
+            });
+        }
+
+        ['purpose', 'hasInviter', 'refusal', 'jobStatus'].forEach(setupSingle);
+        ['travelHistory', 'fundSources'].forEach(setupMulti);
+
+        // 汇总复制
+        document.getElementById('copyBtn').onclick = function() {
+            const getS = (id) => {
+                const el = document.querySelector(`#${id} .active`);
+                return el ? el.dataset.val : '未选';
+            };
+            const getM = (id) => {
+                const selected = Array.from(document.querySelectorAll(`#${id} .selected`)).map(el => el.dataset.val);
+                return selected.length > 0 ? selected.join('、') : '无';
+            };
+
+            let out = `【签证申请详细咨询单】\n`;
+            out += `1. 申请人数：${pL.innerText}\n`;
+            out += `2. 访问目的：${getS('purpose')} (${getS('hasInviter')})\n`;
+            out += `3. 曾获签/去过国家：${getM('travelHistory')}\n`;
+            out += `4. 拒签史：${getS('refusal')}`;
+            if(getS('refusal').includes('有')) out += ` (详情：${document.getElementById('refusalDetail').value})`;
+            out += `\n5. 目前身份状况：${getS('jobStatus')}`;
+            if(getS('jobStatus') === '其他') out += ` (${document.getElementById('jobOtherDetail').value})`;
+            out += `\n6. 资金/收入来源：${getM('fundSources')}\n`;
+            out += `--------------------------\n已填写完成，请协助评估。`;
+
+            const temp = document.createElement('textarea');
+            temp.value = out; document.body.appendChild(temp); temp.select();
+            document.execCommand('copy'); document.body.removeChild(temp);
+
+            const toast = document.getElementById('toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 2500);
+        }
+    </script>
+</body>
+</html>
+
